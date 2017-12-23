@@ -1,0 +1,359 @@
+#include "stdafx.h" 
+#include "Array.h"
+using namespace std;
+
+
+Array::Array()
+{
+	arr = NULL;
+	count = 0;
+}
+
+Array::Array(int n)
+{
+	count = n;
+	arr = new int[n];
+}
+
+Array::~Array()
+{
+	delete[] arr;
+	arr = NULL;
+	count = NULL;
+}
+
+int Array::size_arr()
+{
+	return count;
+}
+
+void Array::add(int data)
+{
+	if (count == 0)
+	{
+		count = 1;
+		arr = new int[count];
+		arr[0] = data;
+	}
+	else {
+		int *temp = new int[count];
+		for (int i = 0; i < count; i++) {
+			temp[i] = arr[i];
+		}
+		delete arr;
+		count += 1;
+		arr = new int[count];
+		for (int i = 0; i < count - 1; i++) {
+			arr[i] = temp[i];
+		}
+		delete temp;
+		arr[count - 1] = data;
+	}
+	copy();
+}
+
+
+
+void Array::random_add(int n, int range)
+{
+	count = n;
+	srand(time(NULL));
+	delete[] arr;
+	arr = new int[n];
+	for (int i = 0; i < count; i++)
+	{
+		int data = rand() % range;
+		arr[i] = data;
+	}
+	copy();
+}
+
+void Array::InsertionSort()
+{
+	int r;
+	int i = 1;
+	while (i != count) 
+	{
+		if (arr[i] < arr[i - 1])
+		{
+			r = arr[i];
+			while (r < arr[i - 1])
+			{
+				arr[i] = arr[i - 1];
+				i--;
+			}
+			arr[i] = r;
+		}
+
+		i++;
+	}
+}
+
+
+
+
+void Array::ShellSort()
+{
+	unsigned i, j, n;
+	int t;
+	for (n = count / 2; n > 0; n /= 2)
+		for (i = n; i < count; i++)
+		{
+			t = arr[i];
+			for (j = i; j >= n; j -= n)
+			{
+				if (t < arr[j - n])
+					arr[j] = arr[j - n];
+				else
+					break;
+			}
+			arr[j] = t;
+		}
+
+}
+
+
+void Array::MergSort(int left, int right)
+{
+	if (left < right)
+	{
+		if (right - left == 1)
+		{
+			if (arr[right] < arr[left])
+			{
+				swap(arr[left], arr[right]);
+			}
+		}
+		else {
+			MergSort(left, left + (right - left) / 2);
+			MergSort(left + (right - left) / 2 + 1, right);
+			Merg(left, right);
+		}
+	}
+}
+
+
+void Array::Merg(int begin, int end)
+{
+	int i = begin,
+		t = 0,
+		mid = begin + (end - begin) / 2,
+		j = mid + 1;
+	int *d = new int[count];
+
+
+	while (i <= mid && j <= end)
+	{
+		if (arr[i] <= arr[j]) {
+			d[t] = arr[i];
+			i++;
+		}
+		else {
+			d[t] = arr[j];
+			j++;
+		}
+		t++;
+	}
+
+	while (i <= mid) {
+		d[t] = arr[i];
+		i++;
+		t++;
+
+	}
+
+	while (j <= end) {
+		d[t] = arr[j];
+		j++;
+		t++;
+	}
+
+	for (i = 0; i < t; i++)
+		arr[begin + i] = d[i];
+	delete[] d;
+}
+
+
+void Array::WrapperMergeSort()
+{
+	MergSort(0, count - 1);
+}
+
+
+void Array::CountingSort()
+{
+	int k, j = 0;
+	int max = arr[0];
+	for (int a = 0; a < count; a++)
+	{
+		if (max < arr[a])
+		{
+			max = arr[a];
+		}
+	}
+	int *arrcount = new int[max + 1];
+
+	for (int i = 0; i <= max; i++)
+	{
+		arrcount[i] = 0;
+	}
+
+	for (int i = 0; i < count; i++) {
+		arrcount[arr[i]] = arrcount[arr[i]] + 1;
+	}
+
+	for (int i = 1; i <= max; i++)
+	{
+		k = arrcount[i];
+		while (k>0)
+		{
+			arr[j] = i;
+			j++;
+			k--;
+		}
+	}
+	delete[] arrcount;
+}
+
+
+int Array::InterpolationSearch(int key)
+{
+	int min = 0, max = count - 1, mid;
+	while (min < max - 1)
+	{
+		mid = min + ((key - arr[min]) * (max - min)) / (arr[max] - arr[min]);
+		if (key == arr[max])
+		{
+			return max;
+		}
+		if (arr[mid] < key)
+		{
+			min = mid;
+		}
+		else
+		{
+			max = mid;
+		}
+	}
+	if (key == arr[max])
+	{
+		return max;
+	}
+	else
+	{
+		return -1;
+	}
+}
+
+
+
+int Array::InterpolationSearchTracking(int key, int ind)
+{
+	int min, max, mid;
+	if (key < arr[ind])
+	{
+		min = 0;
+		max = ind;
+		while (min < max - 1)
+		{
+			mid = min + ((key - arr[min]) * (max - min)) / (arr[max] - arr[min]);
+			if (mid == min)
+			{
+				break;
+			}
+			if (key == arr[max])
+			{
+				return max;
+			}
+			if (arr[mid] < key)
+			{
+				min = mid;
+			}
+			else
+			{
+				max = mid;
+			}
+		}
+	}
+	if (key > arr[ind])
+	{
+		min = ind;
+		if (min == -1)
+		{
+			min = 0;
+		}
+		max = count - 1;
+		while (min < max - 1)
+		{
+			mid = min + ((key - arr[min]) * (max - min)) / (arr[max] - arr[min]);
+			if (mid == min)
+			{
+				break;
+			}
+			if (key == arr[max])
+			{
+				return max;
+			}
+			if (arr[mid] < key)
+			{
+				min = mid;
+			}
+			else
+			{
+				max = mid;
+			}
+		}
+	}
+
+	if (arr[ind] == key)
+	{
+		return ind;
+	}
+	else
+	{
+		if (arr[max] == key)
+		{
+			return max;
+		}
+		else
+		{
+			return -1;
+		}
+	}
+}
+
+
+void Array::copy()
+{
+	delete copyarr;
+	copyarr = new int[count];
+	for (int i = 0; i < count; i++)
+	{
+		copyarr[i] = arr[i];
+	}
+}
+
+
+void Array::copyArr()
+{
+	for (int i = 0; i < count; i++)
+	{
+		arr[i] = copyarr[i];
+	}
+}
+
+
+void Array::delete_arr()
+{
+	delete[] arr;
+	arr = NULL;
+	delete[] copyarr;
+	copyarr = NULL;
+	count = NULL;
+}
+
+
+int Array::print_arr(int i)
+{
+	if (count != 0) return arr[i];
+}
