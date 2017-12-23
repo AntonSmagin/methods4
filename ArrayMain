@@ -1,0 +1,232 @@
+#include "stdafx.h" 
+#include <string> 
+#include <stdio.h>
+#include "time.h"
+
+#include "Array.h" 
+
+using namespace std;
+
+
+int main()
+{
+	setlocale(LC_ALL, "Russian");
+	Array array;
+	string name_file;
+	int userSelection = 0;
+	do {
+		system("cls");
+		cout << "Выберите пункт меню:" << endl;
+		cout << "1.Добавить элемент в массив" << endl;
+		cout << "2.Заполнение массива рандомными значениями" << endl;
+		cout << "3.Вывод элементов массива на экран" << endl;
+		cout << "4.Удалить массив" << endl;
+		cout << "5.Сортировка вставкой" << endl;
+		cout << "6.Сортировка методом Шелла" << endl;
+		cout << "7.Сортировка слиянием" << endl;
+		cout << "8.Сортировка подсчётом" << endl;
+		cout << "9.Интерполяционный поиск" << endl;
+		
+
+		int data, error, amount, range, key, search, IndBinary, IndInterpolation;
+		int flag = 0;
+		bool Binary = false, Interpolation = false;
+		clock_t t;
+		cout << endl;
+		cout << "Для выхода введите 0" << endl;
+		cin >> userSelection;
+		if (userSelection < 0 || userSelection>9)
+		{
+			cout << "Ошибка! Необходимо ввести число от 1 до 15 или 0 для выхода." << endl << endl;
+			system("pause");
+			cin.clear();
+			cin.ignore();
+			system("cls");
+		}
+
+		switch (userSelection) {
+		case 1:
+			error = 1;
+			for (;;)
+			{
+				cout << "Введите значение для добавления:" << endl;
+				if ((cin >> data) && (cin.good()))
+				{
+					break;
+				}
+				else
+				{
+					if (error == 1)
+					{
+						error = 0;
+						cout << "\n Некорректное значение. Введите число" << endl << endl;
+						system("pause");
+					}
+
+					cin.clear();
+					cin.ignore();
+					system("cls");
+				}
+			}
+			array.add(data);
+			cout << endl;
+			cout << "Элемент успешно добавлен." << endl;
+			system("pause");
+			break;
+
+
+		case 2:
+			system("cls");
+			error = 1;
+			while (flag != 1 && error == 1)
+			{
+				cout << "Введите количество элементов:" << endl;
+				if ((cin >> amount) && (cin.good()) && amount > 0)
+				{
+					flag = 1;
+					error = 0;
+				}
+				else
+				{
+					if (error == 1)
+					{
+						cout << "\n Некорректное значение. Выполните операцию заново." << endl << endl;
+						system("pause");
+					}
+					cin.clear();
+					cin.ignore();
+					system("cls");
+				}
+			}
+
+			while (flag != 0 && error == 0)
+			{
+				cout << "Введите максимальное значение:" << endl;
+				if ((amount > 0) && (cin >> range) && (cin.good()) && range > 0)
+				{
+					flag = 0;
+					array.random_add(amount, range);
+					system("cls");
+					cout << "Элементы были успешно добавлены." << endl << endl;
+					system("pause");
+					system("cls");
+				}
+				else
+				{
+					if (error == 1)
+					{
+						error = 0;
+						cout << "\n Некорректное значение. Выполните операцию заново." << endl << endl;
+						system("pause");
+					}
+					cin.clear();
+					cin.ignore();
+				}
+				system("cls");
+			}
+			system("cls");
+			break;
+
+
+		case 3:
+			cout << endl;
+			if (array.size_arr() == 0) {
+				cout << "Массив пуст. Добавьте элементы" << endl << endl;
+				system("pause");
+
+				break;
+			}
+
+			cout << "Элементы массива:" << endl;
+			for (int i = 0; i < array.size_arr(); i++) {
+				cout << i + 1 << ')' << array.print_arr(i) << endl;
+			}
+			cout << endl;
+			system("pause");
+			break;
+
+
+		case 4:
+			array.delete_arr();
+			cout << "Массив удален" << endl;
+			system("pause");
+			break;
+
+
+		case 5:
+			array.copyArr();
+			t = clock();
+			array.InsertionSort();
+			t = clock() - t;
+			cout << "Время сортировки в секундах:" << t << endl;
+			system("pause");
+			break;
+
+
+		case 6:
+			array.copyArr();
+			t = clock();
+			array.ShellSort();
+			t = clock() - t;
+			cout << "Время сортировки в секундах:" << t << endl;
+			system("pause");
+			break;
+
+
+		case 7:
+
+			array.copyArr();
+			t = clock();
+			array.WrapperMergeSort();
+			t = clock() - t;
+			cout << "Время сортировки в секундах:" << t << endl;
+			system("pause");
+			break;
+
+
+		case 8:
+			array.copyArr();
+			t = clock();
+			array.CountingSort();
+			t = clock() - t;
+			cout << "Время сортировки в секундах:" << t << endl;
+			system("pause");
+			break;
+
+
+		case 9:
+			cout << "Введите элемент:" << endl;
+			cin >> key;
+			if (Interpolation == false)
+			{
+				Interpolation = true;
+				t = clock();
+				search = array.InterpolationSearch(key);
+				IndInterpolation = search;
+				t = clock() - t;
+			}
+			else
+			{
+				t = clock();
+				search = array.InterpolationSearchTracking(key, IndInterpolation);
+				IndInterpolation = search;
+				t = clock() - t;
+			}
+			if (search == -1)
+			{
+				cout << "Элемента в массиве нет" << endl;
+			}
+			else
+			{
+				cout << search << endl;
+			}
+			cout << "Время сортировки в секундах:" << t << endl;
+			system("pause");
+			break;
+
+
+		}
+	} while (userSelection);
+	system("pause");
+	return 0;
+}
