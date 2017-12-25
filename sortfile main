@@ -1,0 +1,111 @@
+#include "stdafx.h"
+#include "clocale" 
+#include "iostream"
+#include <conio.h> 
+#include "fstream"
+#include "string"
+#include "time.h"
+#include"sort_file.h"
+
+using namespace std;
+
+void print(int data)
+{
+	cout << data << endl;
+}
+
+int main()
+{
+
+	setlocale(LC_ALL, "Russian");
+	sort_file file;
+	clock_t t;
+	string nameFile,string,substring;
+	int data,index;
+	int r = 20;
+	do {
+		system("cls");
+		printf("1.Randomly filling\n");
+		printf("2.Show file\n");
+		printf("3.Natural Merging Sort\n");
+		printf("4.KMP Search\n");
+		printf("5.BM Search\n");
+		cin >> r;
+		switch (r) {
+		case 1:
+			cout << "Name file:";
+			cin >> nameFile;
+			cout << "Number of items:";
+			cin >> data;
+			file.randomAdd(nameFile, data);
+			break;
+
+
+
+		case 2:
+			cout << "Name file:";
+			cin >> nameFile;
+			file.readingFromFile(nameFile, print);
+			_getch();
+			break;
+
+
+
+		case 3:
+			cout << "Name file:";
+			cin >> nameFile;
+			t = clock();
+			file.naturalMergingSort(nameFile);
+			t = clock() - t;
+			cout << "Sort the end"<<endl << t;
+			_getch();
+			break;
+
+
+
+		case 4:
+			cout << "Enter string:";
+			cin >> string;
+			cout << "Enter substring:";
+			cin >> substring;
+			t = clock();
+			index=file.KMPSearch(string, substring);
+			t = clock() - t;
+			if (index == -1)
+			{
+				cout << "There is no subword" << endl;
+			}
+			else
+			{
+				cout << "Index:"<< index << endl<<"Time:" << t;
+			}
+			_getch();
+			break;
+			
+
+
+
+		case 5:
+			cout << "Enter string:";
+			cin >> string;
+			cout << "Enter substring:";
+			cin >> substring;
+			t = clock();
+			index = file.BMSearch(string, substring);
+			t = clock() - t;
+			if (index == -1)
+			{
+				cout << "There is no subword" << endl;
+			}
+			else
+			{
+				cout << "Index:" << index << endl << "Time:" << t;
+			}
+			_getch();
+			break;
+		}
+	} while (r);
+	system("pause");
+	return 0;
+
+}
