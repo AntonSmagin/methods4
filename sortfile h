@@ -1,0 +1,16 @@
+#pragma once
+#include "string"
+
+using namespace std;
+class sort_file
+{
+
+public:
+	sort_file();
+	~sort_file();
+	void randomAdd(string, int);
+	void readingFromFile(string nameFile, void print(int));
+	void naturalMergingSort(string nameFile);
+	int KMPSearch(string text,string substring);
+	int BMSearch(string text, string substring);
+};
