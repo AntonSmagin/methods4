@@ -1,0 +1,330 @@
+#include "stdafx.h"
+#include "sort_file.h"
+#include "fstream"
+#include "string"
+#include "iostream"
+#include <conio.h> 
+#include <ctime>
+
+using namespace std;
+
+
+sort_file::sort_file()
+{
+}
+
+sort_file::~sort_file()
+{
+}
+
+void sort_file::randomAdd(string nameFile, int kolvo)
+{
+	srand(time(NULL));
+	try {
+
+		ofstream fout(nameFile+".txt");
+		for (int i = 0; i < kolvo; i++)
+		{
+			fout << rand();
+			fout << " ";
+		}
+		fout.close();
+		cout << "Данные записаны в файл " << nameFile;
+	}
+	catch (char *str) {
+		cout << str << endl;
+	}
+}
+
+void sort_file::readingFromFile(string nameFile, void print(int))
+{
+	try {
+		ifstream fin(nameFile+".txt");
+		if (!fin.is_open()) // если файл не открыт
+			cout << "Файл не может быть открыт! Возможно вы ввели неверное имя файла.\n"; // сообщить об этом
+		else
+		{
+			int temp;
+			while (fin)
+			{
+				fin >> temp;
+				if (!fin.eof())
+				{
+					
+					print(temp);
+				}
+			}
+			fin.close();
+			cout << "Данные считаны из файла " << nameFile;
+		}
+	}
+	catch (char *str) {
+		cout << str << endl;
+	}
+}
+
+
+
+void sort_file::naturalMergingSort(string nameFile)
+{
+	bool flag1 = true,flag2=true;
+	do
+	{
+ 		ifstream f(nameFile + ".txt");
+		ofstream f1(nameFile + " 1" + ".txt");
+		ofstream f2(nameFile + " 2" + ".txt");
+
+		if ((flag1==true && flag2==false) || (flag1 == false && flag2 == true))
+		{
+			break;
+		}
+		flag1 = flag2 = false;
+		int now, prev;
+		f >> prev;
+		f1 << prev;
+		f1 << " ";
+		f >> now;
+		int numberFile = 1;
+		do {
+			if (now < prev)
+			{
+				if (numberFile == 1)
+				{
+					numberFile = 2;
+					flag2 = true;
+					f2 << now;
+					f2 << " ";
+					prev = now;
+					f >> now;
+					while (now > prev)
+					{
+						f2 << now;
+						f2 << " ";
+						prev = now;
+						f >> now;
+					}
+				}
+				else
+				{
+					numberFile = 1;
+					flag1 = true;
+					f1 << now;
+					f1 << " ";
+					prev = now;
+					f >> now;
+					while (now > prev)
+					{
+						f1 << now;
+						f1 << " ";
+						prev = now;
+						f >> now;
+					}
+					/*f2 << now;
+					f2 << " ";
+					prev = now;
+					f >> now;*/
+				}
+
+
+			}
+			if (now > prev)
+			{
+				flag1 = true;
+				f1 << now;
+				f1 << " ";
+				prev = now;
+				f >> now;
+				while (now > prev)
+				{
+					f1 << now;
+					f1 << " ";
+					prev = now;
+					f >> now;
+				}
+			}
+			//prev = now;
+			//f >> now;
+			if (now == prev && f)
+			{
+				flag1 = true;
+				f1 << now;
+				f1 << " ";
+				prev = now;
+				f >> now;
+				while (now > prev)
+				{
+					f1 << now;
+					f1 << " ";
+					prev = now;
+					f >> now;
+				}
+			}
+
+		} while (f);
+ 		f.close();
+		f1.close();
+		f2.close();
+
+
+		ifstream f1_1(nameFile + " 1" + ".txt");
+		ifstream f1_2(nameFile + " 2" + ".txt");
+		ofstream f1_0(nameFile + ".txt");
+
+		int elemF1;
+		int elemF2;
+		f1_1 >> elemF1; //считал первый элемент в разбитом
+		f1_2 >> elemF2;
+		while (f1_1 && f1_2)
+		{
+			if (elemF1 > elemF2)
+			{
+				f1_0 << elemF2 << " ";
+				f1_2 >> elemF2;
+			}
+			else
+			{
+				f1_0 << elemF1 << " ";
+				f1_1 >> elemF1;
+			}
+		}
+
+
+		while (f1_1)
+		{
+			f1_0 << elemF1 << " ";
+			f1_1 >> elemF1;
+		}
+
+
+		while (f1_2)
+		{
+			f1_0 << elemF2 << " ";
+			f1_2 >> elemF2;
+		}
+	
+
+		
+
+		f1_0.close();
+		f1_1.close();
+		f1_2.close();
+	}while (flag1 == true && flag2 == true);
+
+}
+
+
+
+
+int sort_file::KMPSearch(string text, string substring)
+{
+	int  sl, ssl,count=1;
+	int res = -1;
+	sl =text.length();
+	ssl =substring.length();
+	if (sl == 0)
+	{
+		cout << "Неверно задана строка\n";
+	}
+	else
+		if (ssl == 0)     cout << "Неверно задана подстрока\n";
+	else
+	{
+		int  i, j = 0, k = -1;
+		int  *d;
+		d = new int[1000];
+		d[0] = -1;
+		while (j < ssl - 1)
+		{
+			while (k >= 0 && substring[j] != substring[k])
+				k = d[k];
+			j++;
+			k++;
+			if (substring[j] == substring[k])
+			{
+
+				d[j] = d[k];
+			}
+			else
+			{ 
+				d[j] = k;
+			}
+		}
+		i = 0;
+		j = 0;
+		while (j < ssl && i < sl)
+		{
+			while (j >= 0 && text[i] != substring[j])
+			{
+				j = d[j];
+				count++;
+			}
+			i++;
+			j++;
+		}
+		delete[] d;
+		res = j == ssl ? i - ssl : -1;
+	}
+	cout << "count:" << count << endl;
+	return res;
+}
+
+
+
+
+
+int sort_file::BMSearch(string text, string substring)
+{
+	int  sl, ssl,count=0;
+	int res = -1;
+	int count1 = 0;
+	bool fl = false;
+	sl = text.length();
+	ssl = substring.length();
+	if (sl == 0)     cout << "Неверно задана строка\n";
+	else if (ssl == 0)     cout << "Неверно задана подстрока\n";
+	else {
+		int  i = ssl - 1 , j = i, pos = j;
+		while (j < sl)
+		{
+			count1++;
+			fl = false;
+			i = ssl - 1;
+			pos = j;
+			while (pos >= j-ssl+1)
+			{
+				if (text[pos] == substring[i])
+				{
+					pos--;
+					i--;
+				}
+				else
+				{
+					fl = true;
+					while ((i > -1)&&(substring[i] != text[j]) )
+					{
+						i--;
+					}
+					break;
+				}
+			}
+			if (fl==false)
+			{
+				cout << "count:" << count1 << endl;
+				return j-ssl+1;
+			}
+			else
+			{
+				if (i == -1)
+				{  
+					j = j + ssl;
+				}
+				else
+				{
+					j = j + ssl - i - 1;
+				}
+			}
+		}
+	}
+	cout << "count:" << count1 << endl;
+	return res;
+}
