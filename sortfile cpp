@@ -233,13 +233,13 @@ int sort_file::KMPSearch(string text, string substring)
 		int  *d;
 		d = new int[1000];
 		d[0] = -1;
-		while (j < ssl - 1)
+		while (j < ssl - 1) //циклы для создания d[] опираясь на которое мы будем возвращаться к первому элементу ssl 
 		{
 			while (k >= 0 && substring[j] != substring[k])
 				k = d[k];
 			j++;
 			k++;
-			if (substring[j] == substring[k])
+			if (substring[j] == substring[k])//учет что эл могут быть равными
 			{
 
 				d[j] = d[k];
@@ -249,9 +249,10 @@ int sort_file::KMPSearch(string text, string substring)
 				d[j] = k;
 			}
 		}
+		//сам процесс перемещения по s1 и сравнивания с ssl
 		i = 0;
 		j = 0;
-		while (j < ssl && i < sl)
+		while (j <= ssl && i <= sl)//следим за размерами остаавшегося текста и не закончились ли символы в ssl (нужно ли = )
 		{
 			while (j >= 0 && text[i] != substring[j])
 			{
