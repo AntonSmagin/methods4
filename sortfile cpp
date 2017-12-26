@@ -70,11 +70,11 @@ void sort_file::naturalMergingSort(string nameFile)
 	bool flag1 = true,flag2=true;
 	do
 	{
- 		ifstream f(nameFile + ".txt");
+ 		ifstream f(nameFile + ".txt"); 
 		ofstream f1(nameFile + " 1" + ".txt");
 		ofstream f2(nameFile + " 2" + ".txt");
 
-		if ((flag1==true && flag2==false) || (flag1 == false && flag2 == true))
+		if ((flag1==true && flag2==false) || (flag1 == false && flag2 == true))//если один из файлов пуст сортировку нужно завершить
 		{
 			break;
 		}
@@ -84,19 +84,19 @@ void sort_file::naturalMergingSort(string nameFile)
 		f1 << prev;
 		f1 << " ";
 		f >> now;
-		int numberFile = 1;
-		do {
-			if (now < prev)
+		int numberFile = 1;// метка что последняя запись была в f1
+		do {//f не пуст
+			if (now < prev)//следующий эл в f меньше предыдущего, значит мы должны начать записывать в файл f2
 			{
 				if (numberFile == 1)
-				{
-					numberFile = 2;
+				{ //начили записывать в f2
+					numberFile = 2;// метка что последняя запись была в f2
 					flag2 = true;
 					f2 << now;
 					f2 << " ";
 					prev = now;
 					f >> now;
-					while (now > prev)
+					while (now > prev)//продолжаем запись пока нам встречается упорядоченная последовательность из f
 					{
 						f2 << now;
 						f2 << " ";
@@ -106,13 +106,14 @@ void sort_file::naturalMergingSort(string nameFile)
 				}
 				else
 				{
+					//начало записи в f1 если до этого записывали в f2 и до шли до условия что след эл меньше предыдущ
 					numberFile = 1;
 					flag1 = true;
 					f1 << now;
 					f1 << " ";
 					prev = now;
 					f >> now;
-					while (now > prev)
+					while (now > prev)//пока упорядочен,продалжаем запись в f1
 					{
 						f1 << now;
 						f1 << " ";
@@ -127,14 +128,14 @@ void sort_file::naturalMergingSort(string nameFile)
 
 
 			}
-			if (now > prev)
+			if (now > prev)//запись в f1 если след эл больше предыдущ
 			{
 				flag1 = true;
 				f1 << now;
 				f1 << " ";
 				prev = now;
 				f >> now;
-				while (now > prev)
+				while (now > prev)//пока упорядочен,продалжаем запись в f1
 				{
 					f1 << now;
 					f1 << " ";
@@ -144,7 +145,7 @@ void sort_file::naturalMergingSort(string nameFile)
 			}
 			//prev = now;
 			//f >> now;
-			if (now == prev && f)
+			if (now == prev && f)// если одинаковые эл стояли рядом 
 			{
 				flag1 = true;
 				f1 << now;
@@ -164,7 +165,8 @@ void sort_file::naturalMergingSort(string nameFile)
  		f.close();
 		f1.close();
 		f2.close();
-
+		//до этого была процедура разбиения на файлы
+		//теперь сливаем эти 2 файла
 
 		ifstream f1_1(nameFile + " 1" + ".txt");
 		ifstream f1_2(nameFile + " 2" + ".txt");
@@ -174,8 +176,9 @@ void sort_file::naturalMergingSort(string nameFile)
 		int elemF2;
 		f1_1 >> elemF1; //считал первый элемент в разбитом
 		f1_2 >> elemF2;
-		while (f1_1 && f1_2)
+		while (f1_1 && f1_2)//наличие эл в обоих файлах
 		{
+			//сливаем оба файла упорядочивая элементы, с помощью сравнения
 			if (elemF1 > elemF2)
 			{
 				f1_0 << elemF2 << " ";
@@ -189,14 +192,14 @@ void sort_file::naturalMergingSort(string nameFile)
 		}
 
 
-		while (f1_1)
+		while (f1_1) //если закончился файл f2, то f1 последовательно добавл в f
 		{
 			f1_0 << elemF1 << " ";
 			f1_1 >> elemF1;
 		}
 
 
-		while (f1_2)
+		while (f1_2)//если закончился файл f1, то f2 последовательно добавл в f
 		{
 			f1_0 << elemF2 << " ";
 			f1_2 >> elemF2;
