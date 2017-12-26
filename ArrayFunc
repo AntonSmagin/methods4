@@ -221,6 +221,21 @@ int Array::InterpolationSearch(int key)
 	int min = 0, max = count - 1, mid;
 	while (min < max - 1)
 	{
+	
+		if (arr[max] == arr[min]) // исключить деление на ноль в mid
+		{
+			if (key == arr[min]) 
+			{
+				return min;
+			}
+			else
+			{
+				return -1;
+				break;
+			}
+		}
+		
+		
 		mid = min + ((key - arr[min]) * (max - min)) / (arr[max] - arr[min]);
 		if (key == arr[max])
 		{
