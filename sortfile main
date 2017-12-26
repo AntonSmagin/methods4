@@ -25,17 +25,17 @@ int main()
 	int r = 20;
 	do {
 		system("cls");
-		printf("1.Randomly filling\n");
-		printf("2.Show file\n");
-		printf("3.Natural Merging Sort\n");
-		printf("4.KMP Search\n");
-		printf("5.BM Search\n");
+		printf("1.Заполнение массива рандомными значениями\n");
+		printf("2.Распечатать файл\n");
+		printf("3.Сортировка естественным слиянием\n");
+		printf("4.КMП поиск\n");
+		printf("5.БM поиск\n");
 		cin >> r;
 		switch (r) {
 		case 1:
-			cout << "Name file:";
+			cout << "Имя файла:";
 			cin >> nameFile;
-			cout << "Number of items:";
+			cout << "Количество элементов:";
 			cin >> data;
 			file.randomAdd(nameFile, data);
 			break;
@@ -43,7 +43,7 @@ int main()
 
 
 		case 2:
-			cout << "Name file:";
+			cout << "Имя файла:";
 			cin >> nameFile;
 			file.readingFromFile(nameFile, print);
 			_getch();
@@ -52,32 +52,32 @@ int main()
 
 
 		case 3:
-			cout << "Name file:";
+			cout << "Имя файла:";
 			cin >> nameFile;
 			t = clock();
 			file.naturalMergingSort(nameFile);
 			t = clock() - t;
-			cout << "Sort the end"<<endl << t;
+			cout << "Сортировка завершена"<<endl << t;
 			_getch();
 			break;
 
 
 
 		case 4:
-			cout << "Enter string:";
+			cout << "Введите строку:";
 			cin >> string;
-			cout << "Enter substring:";
+			cout << "Введите подстроку:";
 			cin >> substring;
 			t = clock();
 			index=file.KMPSearch(string, substring);
 			t = clock() - t;
 			if (index == -1)
 			{
-				cout << "There is no subword" << endl;
+				cout << "Совподения нет" << endl;
 			}
 			else
 			{
-				cout << "Index:"<< index << endl<<"Time:" << t;
+				cout << "Индекс:"<< index << endl<<"Time:" << t;
 			}
 			_getch();
 			break;
@@ -86,20 +86,20 @@ int main()
 
 
 		case 5:
-			cout << "Enter string:";
+			cout << "Введите строку:";
 			cin >> string;
-			cout << "Enter substring:";
+			cout << "Введите подстроку:";
 			cin >> substring;
 			t = clock();
 			index = file.BMSearch(string, substring);
 			t = clock() - t;
 			if (index == -1)
 			{
-				cout << "There is no subword" << endl;
+				cout << "Совподения нет" << endl;
 			}
 			else
 			{
-				cout << "Index:" << index << endl << "Time:" << t;
+				cout << "Индекс:" << index << endl << "Time:" << t;
 			}
 			_getch();
 			break;
