@@ -283,24 +283,24 @@ int sort_file::BMSearch(string text, string substring)
 	if (sl == 0)     cout << "Неверно задана строка\n";
 	else if (ssl == 0)     cout << "Неверно задана подстрока\n";
 	else {
-		int  i = ssl - 1 , j = i, pos = j;
-		while (j < sl)
+		int  i = ssl - 1 , j = i, pos = j;// начинаем с последнего эл ssl и соотвевтств позиции в тексте
+		while (j < sl)//проверяем входит ли позиция j в текст
 		{
 			count1++;
 			fl = false;
 			i = ssl - 1;
 			pos = j;
-			while (pos >= j-ssl+1)
+			while (pos >= j-ssl+1) //проверка на случай если всё слово уже найдено в тексте
 			{
-				if (text[pos] == substring[i])
+				if (text[pos] == substring[i])//сравниваем символы текста и строки, и переходим к следующ
 				{
 					pos--;
 					i--;
 				}
-				else
+				else //очередные символы не равны, меняем флаг, чтобы попасть на перемещение
 				{
 					fl = true;
-					while ((i > -1)&&(substring[i] != text[j]) )
+					while ((i > -1)&&(substring[i] != text[j]) )// в диапозоне размера слова ищем возможное совпадение конца слова и символа из текста
 					{
 						i--;
 					}
@@ -312,7 +312,7 @@ int sort_file::BMSearch(string text, string substring)
 				cout << "count:" << count1 << endl;
 				return j-ssl+1;
 			}
-			else
+			else //если слово полностью не совпало,и флаг соответственно не сработал, то мы попадаем сюда и перемещаемся в тексте дальше
 			{
 				if (i == -1)
 				{  
